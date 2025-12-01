@@ -28,12 +28,22 @@ pipeline {
 
         stage('Code Quality - PHPStan') {
             steps {
-                bat "\"%PHP_PATH%\" vendor\\bin\\phpstan analyse --level=max src"
+                script {
+                    def srcExists = fileExists('src')
+                    if (srcExists) {
+                        bat "\"%PHP_PATH%\" vendor\\bin\\phpstan analyse --level=max src"
+                    } else {
+                        echo "⚠️ Folder 'src' tidak ditemukan"
+                        echo "PHPStan analysis di-skip"
+                        echo "Untuk menggunakan PHPStan, buat folder 'src' dan pindahkan kode PHP ke sana"
+                    }
+                }
             }
         }
 
         stage('Build Artifact') {
             steps {
+                echo "Building artifact..."
                 // ZIP semua isi project
                 bat 'tar -a -c -f build.zip .'
             }
@@ -41,19 +51,20 @@ pipeline {
 
         stage('Deploy to FTP') {
             steps {
+                echo "Deploying to FTP server..."
                 ftpPublisher alwaysPublishFromMaster: true,
                 publishers: [
-                    ftpPublisherDesc(
+                    [
                         configName: 'FTP-SERVER',
                         transfers: [
-                            ftpTransfer(
+                            [
                                 sourceFiles: 'build.zip',
                                 remoteDirectory: '/public_html/ci-cd-project',
                                 removePrefix: '',
                                 flatten: false
-                            )
+                            ]
                         ]
-                    )
+                    ]
                 ]
             }
         }
@@ -61,10 +72,10 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline selesai dan berhasil!"
+            echo "✅ Pipeline selesai dan berhasil!"
         }
         failure {
-            echo "Pipeline gagal! Cek log error di atas."
+            echo "❌ Pipeline gagal! Cek log error di atas."
         }
     }
 }
