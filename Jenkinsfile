@@ -4,20 +4,19 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Ryswanmf/php-ci-cd-project.git'
+                checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'composer install'
+                bat 'php composer.phar install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh './vendor/bin/phpunit --testdox'
+                bat 'php vendor\\bin\\phpunit --testdox'
             }
         }
     }
