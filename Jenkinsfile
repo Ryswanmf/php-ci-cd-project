@@ -44,28 +44,21 @@ pipeline {
         stage('Build Artifact') {
             steps {
                 echo "Building artifact..."
-                // ZIP semua isi project
                 bat 'tar -a -c -f build.zip .'
+                echo "✅ Artifact build.zip berhasil dibuat"
             }
         }
 
         stage('Deploy to FTP') {
             steps {
-                echo "Deploying to FTP server..."
-                ftpPublisher alwaysPublishFromMaster: true,
-                publishers: [
-                    [
-                        configName: 'FTP-SERVER',
-                        transfers: [
-                            [
-                                sourceFiles: 'build.zip',
-                                remoteDirectory: '/public_html/ci-cd-project',
-                                removePrefix: '',
-                                flatten: false
-                            ]
-                        ]
-                    ]
-                ]
+                echo "📦 Build artifact: build.zip"
+                echo "✅ Artifact siap untuk di-deploy"
+                echo "⚠️ FTP deployment belum dikonfigurasi"
+                echo ""
+                echo "Untuk mengaktifkan FTP deployment:"
+                echo "1. Install plugin 'Publish Over FTP' di Jenkins"
+                echo "2. Konfigurasi FTP server di Manage Jenkins > System"
+                echo "3. Update Jenkinsfile dengan konfigurasi FTP"
             }
         }
     }
@@ -73,6 +66,11 @@ pipeline {
     post {
         success {
             echo "✅ Pipeline selesai dan berhasil!"
+            echo "📊 Summary:"
+            echo "   - Dependencies: Installed"
+            echo "   - Tests: Passed"
+            echo "   - Build: Success"
+            echo "   - Artifact: build.zip"
         }
         failure {
             echo "❌ Pipeline gagal! Cek log error di atas."
