@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PHP_PATH = "C:\\laragon\\bin\\php\\php-8.1.10\\php.exe"
+        PHP_PATH = "D:\\laragon\\bin\\php\\php-8.1.10-Win32-vs16-x64\\php.exe"
         WORKSPACE_DIR = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Riswan-PHP-CI-CD-Pipeline"
     }
 
