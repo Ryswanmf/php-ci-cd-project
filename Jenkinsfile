@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -10,13 +11,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'php composer.phar install'
+                bat '"C:\\laragon\\bin\\php\\php-8.1.10\\php.exe" composer.phar install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'php vendor\\bin\\phpunit --testdox'
+                bat '"C:\\laragon\\bin\\php\\php-8.1.10\\php.exe" vendor\\bin\\phpunit --testdox'
             }
         }
     }
